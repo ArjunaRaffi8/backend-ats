@@ -1,6 +1,6 @@
 import { Router } from "express";
 import PostsController from "../../controllers/posts/posts.controller";
-import { uploadSingleImage } from "../../middleware/upload.middleware";
+import { upload } from "../../middleware/upload.middleware";
 
 const router = Router();
 
@@ -12,10 +12,10 @@ router.put("/categories/:id", PostsController.updateCategory);
 router.delete("/categories/:id", PostsController.deleteCategory);
 
 // ===== POST ROUTES =====
-router.post("/posts", uploadSingleImage, PostsController.createPost);
+router.post("/posts", upload.single("image"), PostsController.createPost);
 router.get("/posts", PostsController.getAllPosts);
 router.get("/posts/:id", PostsController.getPostById);
-router.put("/posts/:id", uploadSingleImage, PostsController.updatePost);
+router.put("/posts/:id", upload.single("image"), PostsController.updatePost);
 router.delete("/posts/:id", PostsController.deletePost);
 
 export default router;
