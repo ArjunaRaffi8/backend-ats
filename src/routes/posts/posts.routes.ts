@@ -6,5 +6,6 @@ const router = Router();
 
 router.post("/", uploadSingleImage, PostController.createPost);
 router.get("/", PostController.getAllPosts);
+router.get("/:id", PostController.getPostById);
 
 export default router;

@@ -101,6 +101,44 @@ class PostController {
     }
 };
 
+
+getPostById = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+
+        const post = await db
+            .select()
+            .from(postsTable)
+            .where(and(
+                eq(postsTable.id, id),
+                eq(postsTable.status, "published")
+            )
+        );
+
+        if (post.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Post retrieved successfully",
+            data: post[0],
+        });
+
+    } catch (error: any) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
+};
+
 }
 
 export default new PostController();
