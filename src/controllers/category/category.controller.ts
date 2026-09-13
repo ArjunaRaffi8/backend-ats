@@ -38,6 +38,30 @@ export class CategoryController {
             });
         }
     };
+
+    // GET ALL CATEGORIES
+    getAllCategories = async (req: Request, res: Response) => {
+        try {
+            const categories = await db
+                .select()
+                .from(categoriesTable);
+
+            return res.status(200).json({
+                success: true,
+                message: "Categories retrieved successfully",
+                data: categories,
+            });
+
+        } catch (error: any) {
+            console.error(error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error.message,
+            });
+        }
+    };
 }
 
 export default new CategoryController();
