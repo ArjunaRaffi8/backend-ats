@@ -8,5 +8,6 @@ router.post("/", uploadSingleImage, PostController.createPost);
 router.get("/", PostController.getAllPosts);
 router.get("/:id", PostController.getPostById);
 router.put("/:id", uploadSingleImage, PostController.updatePost);
+router.delete("/:id", PostController.deletePost);
 
 export default router;

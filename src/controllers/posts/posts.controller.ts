@@ -211,6 +211,54 @@ updatePost = async (req: Request, res: Response) => {
     }
 };
 
+
+deletePost = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+
+        // Cari post yang akan dihapus
+        const existingPost = await db
+            .select()
+            .from(postsTable)
+            .where(eq(postsTable.id, id));
+
+        if (existingPost.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found",
+            });
+        }
+
+        // Hapus gambar dari Cloudinary jika ada
+        if (existingPost[0].imagePublicId) {
+            await deleteFromCloudinary(existingPost[0].imagePublicId);
+        }
+
+        // Soft delete post
+        await db
+            .update(postsTable)
+            .set({
+                status: "deleted",
+                updatedAt: new Date(),
+            })
+            .where(eq(postsTable.id, id));
+
+        return res.status(200).json({
+            success: true,
+            message: "Post deleted successfully",
+        });
+
+    } catch (error: any) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
+};
+
 }
 
 export default new PostController();
