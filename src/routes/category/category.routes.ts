@@ -6,5 +6,6 @@ const router = Router();
 router.post("/", CategoryController.createCategory);
 router.get("/", CategoryController.getAllCategories);
 router.get("/:id", CategoryController.getCategoryById);
+router.put("/:id", CategoryController.updateCategory);
 
 export default router;
