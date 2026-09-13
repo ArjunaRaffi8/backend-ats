@@ -4,10 +4,10 @@ import { uploadSingleImage } from "../../middleware/upload.middleware";
 
 const router = Router();
 
-router.post("/", uploadSingleImage, PostController.createPost);
-router.get("/", PostController.getAllPosts);
-router.get("/:id", PostController.getPostById);
-router.put("/:id", uploadSingleImage, PostController.updatePost);
-router.delete("/:id", PostController.deletePost);
+router.post("/posts", uploadSingleImage, PostController.createPost);
+router.get("/posts", PostController.getAllPosts);
+router.get("/posts/:id", PostController.getPostById);
+router.put("/posts/:id", uploadSingleImage, PostController.updatePost);
+router.delete("/posts/:id", PostController.deletePost);
 
 export default router;

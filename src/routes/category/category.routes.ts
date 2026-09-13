@@ -3,10 +3,10 @@ import CategoryController from "../../controllers/category/category.controller";
 
 const router = Router();
 
-router.post("/", CategoryController.createCategory);
-router.get("/", CategoryController.getAllCategories);
-router.get("/:id", CategoryController.getCategoryById);
-router.put("/:id", CategoryController.updateCategory);
-router.delete("/:id", CategoryController.deleteCategory);
+router.post("/category", CategoryController.createCategory);
+router.get("/category", CategoryController.getAllCategories);
+router.get("/category/:id", CategoryController.getCategoryById);
+router.put("/category/:id", CategoryController.updateCategory);
+router.delete("/category/:id", CategoryController.deleteCategory);
 
 export default router;
