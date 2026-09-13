@@ -139,6 +139,78 @@ getPostById = async (req: Request, res: Response) => {
     }
 };
 
+
+updatePost = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const { categoryId, title, content } = req.body;
+
+        if (!categoryId || !title || !content) {
+            return res.status(400).json({
+                success: false,
+                message: "Category, title, dan content wajib diisi",
+            });
+        }
+
+        // Cari post lama
+        const existingPost = await db
+            .select()
+            .from(postsTable)
+            .where(eq(postsTable.id, id));
+
+        if (existingPost.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found",
+            });
+        }
+
+        let imageUrl = existingPost[0].imageUrl;
+        let imagePublicId = existingPost[0].imagePublicId;
+
+        // Kalau user upload gambar baru
+        if (req.file) {
+            // Upload gambar baru ke Cloudinary
+            const result = await uploadToCloudinary(req.file.buffer);
+
+            imageUrl = result.secure_url;
+            imagePublicId = result.public_id;
+
+            // Hapus gambar lama dari Cloudinary
+            if (existingPost[0].imagePublicId) {
+                await deleteFromCloudinary(existingPost[0].imagePublicId);
+            }
+        }
+
+        // Update data post
+        await db
+            .update(postsTable)
+            .set({
+                categoryId,
+                title,
+                content,
+                imageUrl,
+                imagePublicId,
+                updatedAt: new Date(),
+            })
+            .where(eq(postsTable.id, id));
+
+        return res.status(200).json({
+            success: true,
+            message: "Post updated successfully",
+        });
+
+    } catch (error: any) {
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
+};
+
 }
 
 export default new PostController();
