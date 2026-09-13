@@ -62,6 +62,40 @@ export class CategoryController {
             });
         }
     };
+
+    // GET CATEGORY BY ID
+    getCategoryById = async (req: Request, res: Response) => {
+        try {
+            const id = Number(req.params.id);
+
+            const category = await db
+                .select()
+                .from(categoriesTable)
+                .where(eq(categoriesTable.id, id));
+
+            if (category.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Category not found",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Category retrieved successfully",
+                data: category[0],
+            });
+
+        } catch (error: any) {
+            console.error(error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Internal server error",
+                error: error.message,
+            });
+        }
+    };
 }
 
 export default new CategoryController();
